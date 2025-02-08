@@ -1,6 +1,5 @@
-
-
-URL_EXCHANGE_RATES = 'https://v6.exchangerate-api.com/v6/bcd33f338cabc4031a57a76a/latest/USD'
+BOT_TOKEN =
+URL_EXCHANGE_RATES = 
 
 HELP_COM = """
 /start - Активирует бота
