@@ -1,19 +1,21 @@
+import os
+
 import aiohttp
 from aiogram import Router, types
+from dotenv import load_dotenv
 
 from Bot.handlers.handler_text.currency import get_exchange_cur
-from Bot.running import URL_EXCHANGE_RATES
 from Bot.keyboard.inline_keyboard import (exchange_rate_keyboard,
                                           rates_keyboard)
 
 from Bot.handlers.handler_text.currency import currency_name
-
+load_dotenv()
+URL_EXCHANGE_RATES = os.getenv('URL_EXCHANGE_RATES')
 router = Router()
 
 
 @router.callback_query(lambda c: c.data == 'exchange_rate')
 async def ex_callback(callback_query: types.CallbackQuery):
-    message_id = callback_query.message.reply_to_message.message_id
     amount, source_currency = currency_name(callback_query.message.text.lower())
 
     if amount and source_currency:

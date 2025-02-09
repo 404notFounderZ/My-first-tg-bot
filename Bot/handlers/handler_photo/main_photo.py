@@ -1,9 +1,14 @@
+import os
+
 from Bot.handlers.handler_photo.recognize_photo import recognize_file
 from Bot.handlers.handler_photo.convert_image import convert_image
 from Bot.handlers.handler_photo.decode_qr import decode_qr
 
 from aiogram import types, Router, Bot
-from Bot.running import BOT_TOKEN
+from dotenv import load_dotenv
+
+load_dotenv()
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 bot = Bot(token=BOT_TOKEN)
 router = Router()

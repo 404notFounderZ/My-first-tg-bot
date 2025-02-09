@@ -1,4 +1,6 @@
 import datetime
+import os
+
 import aiohttp
 from aiogram import types, Router
 from aiogram.enums import ParseMode
@@ -6,10 +8,12 @@ from aiogram.filters import Command
 from aiogram.types import Message
 
 from Bot.keyboard.inline_keyboard import get_keyboard, rates_keyboard
-from Bot.running import HELP_COM, URL_EXCHANGE_RATES
+from Bot.running import HELP_COM
+from dotenv import load_dotenv
 
+load_dotenv()
+URL_EXCHANGE_RATES = os.getenv('URL_EXCHANGE_RATES')
 router = Router()
-
 
 @router.message(Command('start'))
 async def cmd_start(message: types.Message):

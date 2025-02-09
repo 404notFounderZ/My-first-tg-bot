@@ -4,8 +4,10 @@ import cv2
 
 from aiogram import types, Bot
 from aiogram.enums import ParseMode
-from Bot.running import BOT_TOKEN
+from dotenv import load_dotenv
 
+load_dotenv()
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 bot = Bot(token=BOT_TOKEN)
 
 

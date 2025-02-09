@@ -1,9 +1,14 @@
+import os
+
 import aiohttp
 import re
 from aiogram.types import Message
 
 from Bot.keyboard.inline_keyboard import exchange_rate_keyboard
-from Bot.running import URL_EXCHANGE_RATES
+from dotenv import load_dotenv
+
+load_dotenv()
+URL_EXCHANGE_RATES = os.getenv('URL_EXCHANGE_RATES')
 
 
 # получаем данные о валютах
