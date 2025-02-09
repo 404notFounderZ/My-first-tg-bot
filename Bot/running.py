@@ -1,6 +1,3 @@
-BOT_TOKEN =
-URL_EXCHANGE_RATES = 
-
 HELP_COM = """
 /start - Активирует бота
 /rates - Актуальный курс валют
