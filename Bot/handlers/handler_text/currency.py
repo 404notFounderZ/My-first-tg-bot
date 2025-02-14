@@ -11,7 +11,7 @@ load_dotenv()
 URL_EXCHANGE_RATES = os.getenv('URL_EXCHANGE_RATES')
 
 
-# получаем данные о валютах
+# Получаем актуальные данные о валютах
 async def get_exchange_cur():
     async with aiohttp.ClientSession() as session:
         async with session.get(URL_EXCHANGE_RATES) as response:
@@ -20,10 +20,12 @@ async def get_exchange_cur():
                 'USD': 1,
                 'EUR': data['conversion_rates']['EUR'],
                 'RUB': data['conversion_rates']['RUB'],
-                'KZT': data['conversion_rates']['KZT']
+                'KZT': data['conversion_rates']['KZT'],
+                'TRY': data['conversion_rates']['TRY']
             }
 
 
+# Создаём словарь валют
 def currency_name(text):
     currencies = {
         'евро': 'EUR',
@@ -40,11 +42,14 @@ def currency_name(text):
         '₽': 'RUB',
         '₸': 'KZT',
         'тенге': 'KZT',
-        'т': 'KZT'
+        'т': 'KZT',
+        'TRY': 'TRY',
+        'лиры': 'TRY',
+        '₺': 'TRY'
     }
-    # эта строка ищет в тексте целые или дробные числа
+    # Создаём регулярное выражение для вытаскивания суммы и валюты из сообщения
     numbers = re.findall(r'\d+(?:\.\d+)?', text.lower())
-    # если чисел нет, то функция не выполняется
+    # Если суммы и валюты нет, то функция не выполняется
     if not numbers:
         return None, None
 
@@ -59,6 +64,7 @@ def currency_name(text):
     return amount, detected_cur  # таким образом весь этот блок ищет число и определяет валюту
 
 
+# Создаем функцию для конвертации валют
 async def convert_cur(message: Message):
     amount, source_currency = currency_name(message.text)
     print(f'    Информация о пользователе: {message.from_user}')
@@ -66,19 +72,21 @@ async def convert_cur(message: Message):
         conversion_rates = await get_exchange_cur()
 
         print(f'    Текущий курс по USD: {conversion_rates}')  # в терминал выводится текущий курс валют по USD
-
+        # Если исходная валюта не доллары, то производиться следующие операции
         if source_currency != 'USD':
             amount_usd = amount / conversion_rates[source_currency]
+        # Если доллары, то оставляем их
         else:
             amount_usd = amount
-
+        # Словарь конвертации валют
         conversions = {'EUR': amount_usd * conversion_rates['EUR'],
                        'USD': amount_usd,
                        'RUB': amount_usd * conversion_rates['RUB'],
-                       'KZT': amount_usd * conversion_rates['KZT']
+                       'KZT': amount_usd * conversion_rates['KZT'],
+                       'TRY': amount_usd * conversion_rates['TRY']
                        }
         print(f'    Конвертация: {conversions}')  # сообщение для проверки работы функции конвертирования
-
+        # Формирование итогового сообщения пользователю
         response = '💱Перевод по текущему курсу: \n\n'
         for curr, value in conversions.items():
             if curr == 'EUR':
@@ -87,8 +95,10 @@ async def convert_cur(message: Message):
                 response += f'💵{value:.2f}$\n'
             elif curr == 'RUB':
                 response += f'💳{value:.2f}₽\n'
+            elif curr == 'TRY':
+                response += f'💳{value:.2f}₺\n'
             else:
                 response += f'😭{value:.2f}₸\n'
-
+        # Отправка сообщения вместе с кнопкой обновления курса
         update_cur = await message.reply(response, reply_markup=exchange_rate_keyboard())
         return update_cur.message_id

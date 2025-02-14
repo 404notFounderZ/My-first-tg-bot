@@ -61,9 +61,11 @@ async def cmd_rates(message: Message):
                 usd_to_rub = data['conversion_rates']['RUB']
                 eur_to_usd = data['conversion_rates']['EUR']
                 kzt_to_usd = data['conversion_rates']['KZT']
+                try_to_usd = data['conversion_rates']['TRY']
 
                 eur_to_rub = (1 / eur_to_usd) * usd_to_rub
                 kzt_to_rub = (1 / kzt_to_usd) * usd_to_rub
+                try_to_rub = (1 / try_to_usd) * usd_to_rub
 
             else:
                 await message.answer('❌Не удалось получить актуальный курс валют')
@@ -71,4 +73,5 @@ async def cmd_rates(message: Message):
     await message.answer(f'💰Курс валют в рублях: \n\n'
                          f'1$ (доллар) = {usd_to_rub:.2f}₽\n'
                          f'1€ (евро) = {eur_to_rub:.2f}₽\n'
-                         f'1₸ (тенге) = {kzt_to_rub:.2f}₽', reply_markup=rates_keyboard())
+                         f'1₸ (тенге) = {kzt_to_rub:.2f}₽\n'
+                         f'1₺ (тур. лира) = {try_to_rub:.2f}₽', reply_markup=rates_keyboard())

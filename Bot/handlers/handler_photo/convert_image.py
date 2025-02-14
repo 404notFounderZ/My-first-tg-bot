@@ -14,6 +14,7 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 bot = Bot(token=BOT_TOKEN)
 
 
+# Создаем асинхронную функцию
 async def convert_image(message: types.Message):
     current_time = datetime.datetime.now().time()
     print(f'    Информация о пользователе: {message.from_user}')
@@ -26,21 +27,22 @@ async def convert_image(message: types.Message):
             await message.reply(f'Неподдерживаемый формат. Используйте один из: {', '.join(SUPPORTED_FORMATS)}')
             return
 
+        # Если нет хранилища для временных файлов, то создаем его
         if not os.path.exists('../Bot/temp'):
             os.makedirs('/Bot/temp')
 
-        # cкачиваем файл
+        # Если сообщение фото, то cкачиваем его как фото
         if message.photo:
             file_id = message.photo[-1].file_id
             file = await bot.get_file(file_id)
             await bot.download_file(file.file_path, f'temp/input_image')
-
+        # Если сообщение файл, то скачиваем его как документ
         else:
             file_id = message.document.file_id
             file = await bot.get_file(file_id)
             await bot.download_file(file.file_path, f'temp/input_image')
 
-        # конвертируем изображение
+        # конвертируем изображение с помощью библиотеки PIL
         with Image.open('temp/input_image') as img:
             output_path = f'temp/converted_file_image.{desired_format.lower()}'
             img.save(output_path, format=desired_format)

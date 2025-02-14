@@ -31,7 +31,9 @@ async def ex_callback(callback_query: types.CallbackQuery):
             'EUR': amount_usd * conversion_rates['EUR'],
             'USD': amount_usd,
             'RUB': amount_usd * conversion_rates['RUB'],
-            'KZT': amount_usd * conversion_rates['KZT']
+            'KZT': amount_usd * conversion_rates['KZT'],
+            'TRY': amount_usd * conversion_rates['TRY']
+
         }
 
         print(f'    Конвертация: {conversions}')
@@ -44,6 +46,8 @@ async def ex_callback(callback_query: types.CallbackQuery):
                 response += f'💵{value:.2f}$\n'
             elif curr == 'RUB':
                 response += f'💳{value:.2f}₽\n'
+            elif curr == 'TRY':
+                response += f'💳{value:.2f}₺\n'
             elif curr == 'KZT':
                 response += f'😭{value:.2f}₸\n'
 
@@ -65,16 +69,19 @@ async def update_rates_callback(callback_query: types.CallbackQuery):
                 usd_to_rub = data['conversion_rates']['RUB']
                 eur_to_usd = data['conversion_rates']['EUR']
                 kzt_to_usd = data['conversion_rates']['KZT']
+                try_to_usd = data['conversion_rates']['TRY']
 
                 eur_to_rub = (1 / eur_to_usd) * usd_to_rub
                 kzt_to_rub = (1 / kzt_to_usd) * usd_to_rub
+                try_to_rub = (1 / try_to_usd) * usd_to_rub
 
                 # Обновленный текст с курсами
                 updated_info = (
                     f'💰Курс валют в рублях: \n\n'
                     f'1$ (доллар) = {usd_to_rub:.2f}₽\n'
                     f'1€ (евро) = {eur_to_rub:.2f}₽\n'
-                    f'1₸ (тенге) = {kzt_to_rub:.2f}₽')
+                    f'1₸ (тенге) = {kzt_to_rub:.2f}₽\n'
+                    f'1₺ (тур. лира) = {try_to_rub:.2f}₽')
             else:
                 updated_info = '❌Не удалось обновить курс валют'
 

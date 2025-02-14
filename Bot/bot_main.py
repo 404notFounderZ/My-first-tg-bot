@@ -1,10 +1,10 @@
 import asyncio
 import os
 
+
 from aiogram import Dispatcher, Bot
 
 from dotenv import load_dotenv
-
 from handlers import handler_commands
 from Bot.handlers.handler_photo import main_photo
 from Bot.callbacks import handler_callback, currency_callback
@@ -27,7 +27,6 @@ async def main():
 
     )
     await dp.start_polling(bot)
-
 
 if __name__ == "__main__":
     try:
