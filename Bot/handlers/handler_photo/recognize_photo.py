@@ -1,9 +1,7 @@
 import pytesseract
 import asyncio
-
 import os
 
-from aiogram.types import FSInputFile
 from PIL import Image
 
 from aiogram import types, Bot
@@ -35,28 +33,21 @@ async def recognize_file(message: types.Message):
             file = await bot.get_file(file_id)
             await bot.download_file(file.file_path,
                                     f'temp/recognize')
-
+        # открываем файл, делаем его черно-белым и распознаем текст
         with open('temp/recognize', 'rb') as input_file:
             recognize = Image.open(input_file)
             img = recognize.convert('L')
 
-            check_photo = 'temp/check_image.jpg'
-            img.save(check_photo)
-
-            # потом убрать
-            await message.reply_photo(photo=FSInputFile(check_photo),
-                                      caption='Фото после обработки')
-
             custom_config = r'--oem 3 --psm 6'
             recognize_text = pytesseract.image_to_string(img, config=custom_config, lang='rus+eng')
-
+        # визуальное действие печати
         await bot.send_chat_action(chat_id=message.from_user.id, action='typing')
         await asyncio.sleep(3)
+        # отправление результата пользователю
         await message.reply(f'Распознанный текст:\n\n{recognize_text}')
 
         # удаляем временные файлы
         os.remove('temp/recognize')
-        os.remove(check_photo)
 
     except Exception as e:
         await message.reply(f'Произошла ошибка: {str(e)}')

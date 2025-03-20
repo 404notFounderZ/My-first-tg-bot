@@ -3,7 +3,6 @@ import os
 
 from aiogram.types import FSInputFile
 from PIL import Image
-
 from aiogram import types, Bot
 
 from Bot.running import SUPPORTED_FORMATS
@@ -57,3 +56,4 @@ async def convert_image(message: types.Message):
 
     except Exception as e:
         await message.reply(f'Произошла ошибка при конвертации: {str(e)}')
+

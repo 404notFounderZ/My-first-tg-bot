@@ -5,7 +5,7 @@ import qrcode
 from aiogram import types
 from aiogram.types import FSInputFile
 
-
+# асинхронная функция создание QR - кода
 async def make_qr(message: types.Message):
     global img
     current_time = datetime.datetime.now().time()
@@ -13,11 +13,12 @@ async def make_qr(message: types.Message):
     print(f'Время отправки сообщения пользователем: {current_time}')
     print('Пользователь использовал создание QR-code')
     try:
+        # формат QR - кода и его версия
         if message.text:
             qr = qrcode.QRCode(
                 version=1,
                 error_correction=qrcode.constants.ERROR_CORRECT_L,
-                box_size=10, border=4
+                box_size=10, border=3
             )
             qr.add_data(message.text)
             qr.make(fit=True)
@@ -25,7 +26,7 @@ async def make_qr(message: types.Message):
 
         # создание QR-кода
         with tempfile.NamedTemporaryFile(delete=False, suffix='png') as temp_file:
-            img.save(temp_file, 'PNG')
+            img.save(temp_file, 'png')
             temp_file_path = temp_file.name
 
         await message.reply_photo(photo=FSInputFile(temp_file_path))

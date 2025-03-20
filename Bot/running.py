@@ -7,3 +7,4 @@ HELP_COM = """
 """
 SUPPORTED_FORMATS = ['PNG',  'JPEG', 'WEBP',  'BMP',
                      'PDF', 'TIFF', 'ICO', 'PPM', 'EPS']
+ADMIN = 6236721920

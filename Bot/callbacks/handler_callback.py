@@ -38,7 +38,7 @@ async def process_callback(callback_query: types.CallbackQuery):
         await callback_query.message.edit_text(
             '<b><i>🔒Расшифровка QR-кода:</i></b>\n\n'
             '    Отправь мне фото QR-кода без подписи и я расшифрую его.\n\n'
-            '<b>📌Только стандартные (черно-белые) QR-коды.</b>',
+            '<b>📌Только стандартные QR-коды.</b>',
             parse_mode=ParseMode.HTML, reply_markup=back_keyboard())
 
     await callback_query.answer()  # убираем анимацию кнопки

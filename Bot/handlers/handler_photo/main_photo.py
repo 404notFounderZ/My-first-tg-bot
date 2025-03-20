@@ -1,5 +1,7 @@
 import os
 
+from sympy.abc import lamda
+
 from Bot.handlers.handler_photo.recognize_photo import recognize_file
 from Bot.handlers.handler_photo.convert_image import convert_image
 from Bot.handlers.handler_photo.decode_qr import decode_qr

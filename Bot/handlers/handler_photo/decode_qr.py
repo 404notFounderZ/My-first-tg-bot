@@ -1,7 +1,7 @@
 import datetime
 import os
-import cv2
 
+import zxing
 from aiogram import types, Bot
 from aiogram.enums import ParseMode
 from dotenv import load_dotenv
@@ -10,6 +10,14 @@ load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 bot = Bot(token=BOT_TOKEN)
 
+
+# считывание QR-кода с помощью Zxing
+async def decode_zxing(image_p):
+    reader = zxing.BarCodeReader(java='C:\\Program Files\\Java\\jdk-23\\bin\\java.exe')
+    barc = reader.decode(image_p)
+    if barc and barc.parsed:
+        return barc.parsed
+    return None
 
 # функция для расшифровки qr кода
 async def decode_qr(message: types.Message):
@@ -23,11 +31,8 @@ async def decode_qr(message: types.Message):
         file = await bot.get_file(file_id)
         temp_path = "temp/qr_image.png"
         await bot.download_file(file.file_path, temp_path)
-
-        # считывание QR-кода
-        img = cv2.imread(temp_path)
-        detector = cv2.QRCodeDetector()
-        qr_data, _, _ = detector.detectAndDecode(img)
+        # раскодированная информация
+        qr_data = await decode_zxing(temp_path)
 
         # удаляем временный файл
         os.remove(temp_path)

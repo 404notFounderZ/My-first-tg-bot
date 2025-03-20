@@ -15,12 +15,14 @@ load_dotenv()
 URL_EXCHANGE_RATES = os.getenv('URL_EXCHANGE_RATES')
 router = Router()
 
+
 @router.message(Command('start'))
 async def cmd_start(message: types.Message):
     current_time = datetime.datetime.now().time()
     print(f'    Информация о пользователе: {message.from_user}')
     print(f'Время отправки сообщения пользователем: {current_time}')
     print('Пользователь использовал команду /start')
+
     await message.answer(
         f'👋Привет {message.from_user.first_name}!\nЯ многофункциональный бот. Все мои возможности отмечены ниже.',
         reply_markup=get_keyboard())
@@ -32,7 +34,9 @@ async def cmd_help(message: types.Message):
     print(f'    Информация о пользователе: {message.from_user}')
     print(f'Время отправки сообщения пользователем: {current_time}')
     print('Пользователь использовал команду /help')
-    await message.answer(f'Мои команды:\n{HELP_COM}')
+    await message.answer(f'Мои команды:\n{HELP_COM}\n\n'
+                         f'Полный код бота вы можете посмотреть здесь:'
+                         f' https://github.com/404notFounderZ/My-first-tg-bot')
 
 
 @router.message(Command('get_info'))
