@@ -6,7 +6,6 @@ from aiogram import types
 async def cmd_time(message: types.Message):
     date_source = message.text
     try:
-        print(f'{date_source}')
         date_to_str = datetime.datetime.strptime(date_source, '%d.%m.%Y').date()
         date_week_en = date_to_str.strftime('%A')
         week_rus1 = (date_week_en.replace('Monday', 'понедельник')

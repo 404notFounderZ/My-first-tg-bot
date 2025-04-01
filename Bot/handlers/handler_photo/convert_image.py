@@ -12,13 +12,15 @@ load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 bot = Bot(token=BOT_TOKEN)
 
-
+import logging
+logging.basicConfig(
+    filename='action.log', level=logging.INFO,
+    format='%(asctime)s - %(message)s',
+    datefmt='%d.%m.%Y %H:%M:%S', filemode='a', force=True
+)
 # Создаем асинхронную функцию
 async def convert_image(message: types.Message):
-    current_time = datetime.datetime.now().time()
-    print(f'    Информация о пользователе: {message.from_user}')
-    print(f'Время отправки сообщения пользователем: {current_time}')
-    print(f'Пользователь использовал конвертацию в {SUPPORTED_FORMATS}')
+    logging.info(f'{message.from_user.username, message.from_user.id} --- Convert image')
     try:
         # получаем желаемый формат из подписи
         desired_format = message.caption.upper()

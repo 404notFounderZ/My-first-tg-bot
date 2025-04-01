@@ -9,7 +9,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 URL_EXCHANGE_RATES = os.getenv('URL_EXCHANGE_RATES')
-
+import logging
+logging.basicConfig(
+    filename='action.log', level=logging.INFO,
+    format='%(asctime)s - %(message)s',
+    datefmt='%d.%m.%Y %H:%M:%S', filemode='a', force=True
+)
 
 # Получаем актуальные данные о валютах
 async def get_exchange_cur():
@@ -38,12 +43,12 @@ def currency_name(text):
         'рублей': 'RUB',
         'рубль': 'RUB',
         'руб': 'RUB',
-        'р': 'RUB',
         '₽': 'RUB',
         '₸': 'KZT',
         'тенге': 'KZT',
         'т': 'KZT',
-        'TRY': 'TRY',
+        'try': 'TRY',
+        'лир': 'TRY',
         'лиры': 'TRY',
         '₺': 'TRY'
     }
@@ -67,7 +72,7 @@ def currency_name(text):
 # Создаем функцию для конвертации валют
 async def convert_cur(message: Message):
     amount, source_currency = currency_name(message.text)
-    print(f'    Информация о пользователе: {message.from_user}')
+    logging.info(f'{message.from_user.username, message.from_user.id} --- Convert currency')
     if amount and source_currency:  # сумма и исходное число
         conversion_rates = await get_exchange_cur()
 
@@ -85,7 +90,7 @@ async def convert_cur(message: Message):
                        'KZT': amount_usd * conversion_rates['KZT'],
                        'TRY': amount_usd * conversion_rates['TRY']
                        }
-        print(f'    Конвертация: {conversions}')  # сообщение для проверки работы функции конвертирования
+        print(f'Конвертация: {conversions}')  # сообщение для проверки работы функции конвертирования
         # Формирование итогового сообщения пользователю
         response = '💱Перевод по текущему курсу: \n\n'
         for curr, value in conversions.items():
