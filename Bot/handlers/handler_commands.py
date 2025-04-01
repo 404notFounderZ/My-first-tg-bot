@@ -1,5 +1,3 @@
-import json
-import sqlite3
 import os
 
 import aiohttp
@@ -23,37 +21,8 @@ load_dotenv()
 URL_EXCHANGE_RATES = os.getenv('URL_EXCHANGE_RATES')
 router = Router()
 
-def save_user_to_txt(user: types.User):
-    filename = "data_base.txt"
-
-    file_exists = os.path.exists(filename)
-
-    user_data = (
-        f"ID: {user.id}\n"
-        f"Имя: {user.first_name}\n"
-        f"Юзернейм: @{user.username or 'Не указан'}\n"
-        f"------------------------\n"
-    )
-
-    if not is_user_in_file(user.id, filename):
-        with open(filename, "a", encoding="utf-8") as f:
-            if not file_exists:
-                f.write("======\n\n")
-            f.write(user_data)
-
-def is_user_in_file(user_id: int, filename: str) -> bool:
-    if not os.path.exists(filename):
-        return False
-
-    with open(filename, "r", encoding="utf-8") as f:
-        content = f.read()
-        return f"ID: {user_id}\n" in content
-
 @router.message(Command('start'))
 async def cmd_start(message: types.Message):
-    user = message.from_user
-    save_user_to_txt(user)
-
     logging.info(f'{message.from_user.username, message.from_user.id} --- /start')
     await message.answer(
         f'👋Привет {message.from_user.first_name}!\nЯ многофункциональный бот. Все мои возможности отмечены ниже.',
